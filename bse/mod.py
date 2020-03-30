@@ -20,24 +20,29 @@ class LuaMod(Mod):
 
     _script: str = attr.ib()  # _script could be either a file path, or a text to execute
     _log: logger.Logger = attr.ib()
+    _luart: lupa.LuaRuntime = attr.ib()
 
     @_log.default
     def _initlog(self) -> logger.Logger:
         return logger.new(LuaMod.__class__.__name__)
 
-    def _initglobals(self, luart: lupa.LuaRuntime) -> None:
-        g = luart.globals()
+    @_luart.default
+    def _initluart(self) -> lupa.LuaRuntime:
+        return lupa.LuaRuntime(unpack_returned_tuples=True)
+
+    def _initglobals(self) -> None:
+        g = self._luart.globals()
         if path.exists(self._script):
             g.extensionName = path.fname(self._script)
         else:
             g.extensionName = "string"
+        g["bse_log"] = self._log
 
-    def _runprologue(self, luart: lupa.LuaRuntime) -> None:
-        prologue = path.join(path.here(__file__), "_prologue.lua")
-        luart.execute(path.readfile(prologue))
+    def _runprologue(self) -> None:
+        self._luart.execute(lua.prologue())
 
-    def _initattrs(self, luart: lupa.LuaRuntime) -> None:
-        wb = lua.WebBanking(luart)
+    def _initattrs(self) -> None:
+        wb = lua.WebBanking(self._luart)
         wb.validate()
         d = wb.scope()
 
@@ -49,21 +54,17 @@ class LuaMod(Mod):
         self.name = d["services"][1]
         self.slug = d["extensionName"]
 
-    def _runscript(self, luart: lupa.LuaRuntime) -> None:
+    def _runscript(self) -> None:
         if path.exists(self._script):
-            luart.execute(path.readfile(self._script))
+            self._luart.execute(path.readfile(self._script))
         else:
-            luart.execute(self._script)
+            self._luart.execute(self._script)
 
     def __attrs_post_init__(self) -> None:
-        luart = lupa.LuaRuntime(unpack_returned_tuples=True)
-        self._initglobals(luart)
-
-        self._runprologue(luart)
-
-        self._runscript(luart)
-
-        self._initattrs(luart)
+        self._initglobals()
+        self._runprologue()
+        self._runscript()
+        self._initattrs()
 
 
 def load() -> None:

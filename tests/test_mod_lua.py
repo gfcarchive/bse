@@ -30,3 +30,11 @@ def test_missing_global(script: str) -> None:
     script = path.join(path.here(__file__), script)
     with pytest.raises(SchemaError):
         mod.LuaMod(script)
+
+
+@pytest.mark.parametrize("script", [path.join("samples", "lua_webbanking_MM.lua")])
+def test_mm(script: str) -> None:
+    script = path.join(path.here(__file__), script)
+    m = mod.LuaMod(script)
+    g = m._luart.globals()
+    assert g.test_localizetext == "This is a Test"
