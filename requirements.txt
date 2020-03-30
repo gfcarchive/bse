@@ -1,0 +1,4 @@
+attr>=19.3
+Click>=7.0
+lupa>=1.9
+schema>=0.7
