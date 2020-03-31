@@ -40,6 +40,7 @@ function MM.localizeDate(...--[[ [format, ]date]])
     String str: Datum im lokalisierten Format
     ]]
     local nargs = #{...}
+    local format, date
     if nargs == 2 then
         format, date = ...
     elseif nargs == 1 then
@@ -65,6 +66,7 @@ function MM.localizeNumber(...--[[ [format, ]num]])
     String str: Zahl im lokalisierten Format
     ]]
     local nargs = #{...}
+    local format, num
     if nargs == 2 then
         format, num = ...
     elseif nargs == 1 then
@@ -89,9 +91,32 @@ function MM.localizeAmount(...--[[ [format, ]amount[, currency] ]])
     Rückgabewert:
     String str: Währungsbetrag im lokalisierten Format
     ]]
+    local nargs = #{...}
+    local format, num, currency
+    if nargs == 3 then
+        format, num, currency = ...
+    elseif nargs == 2 then
+        a, b = ...
+        if type(a) == "string" then
+            format = a
+            num = b
+            currency = nil
+        else
+            format = nil
+            num = a
+            currency = b
+        end
+    elseif nargs == 1 then
+        format = nil
+        num = ...
+        currency = nil
+    else
+        error("[MM.localizeAmount] Incorrect parameters. Expected ([format, ]num[, currency]), found (" .. table.concat({...},", ") .. ")")
+    end
+    return bse_localize_amount(num, currency, format)
 end
 
-function MM.urlencode(... --[[str, [charset] ]])
+function MM.urlencode(str, ...--[[ [charset] ]])
     --[[
     Wendet eine URL-Kodierung an.
 
@@ -102,6 +127,10 @@ function MM.urlencode(... --[[str, [charset] ]])
     Rückgabewert:
     String urlencoded: URL-kodierter Text.
     ]]
+    if ... then
+        return bse_urlencode(str, ...)
+    end
+    return bse_urlencode(str)
 end
 
 function MM.urldecode(urlencoded)

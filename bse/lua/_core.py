@@ -18,4 +18,6 @@ def runtime() -> LuaRuntime:
     g["print"] = _globals.bse_print
     g["bse_localize_number"] = _globals.bse_localize_number
     g["bse_localize_date"] = _globals.bse_localize_date
+    g["bse_localize_amount"] = _globals.bse_localize_amount
+    g["bse_urlencode"] = _globals.bse_urlencode
     return luart
