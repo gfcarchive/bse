@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import attr
-import lupa  # type: ignore
+from ._core import LuaRuntime
 from ._scope import Scope
 from schema import Schema, SchemaError, SchemaMissingKeyError, And, Or  # type: ignore
 from typing import Any, Dict
@@ -10,7 +10,7 @@ from typing import Any, Dict
 @attr.s
 class WebBanking(Scope):
 
-    luart: lupa.LuaRuntime = attr.ib()
+    luart: LuaRuntime = attr.ib()
 
     def scope(self) -> Dict[str, Any]:
         g = self.luart.globals()

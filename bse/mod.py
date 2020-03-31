@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import attr
-import lupa  # type: ignore
 from bse import path
 from bse import logger
 from bse import lua
@@ -20,15 +19,15 @@ class LuaMod(Mod):
 
     _script: str = attr.ib()  # _script could be either a file path, or a text to execute
     _log: logger.Logger = attr.ib()
-    _luart: lupa.LuaRuntime = attr.ib()
+    _luart: lua.LuaRuntime = attr.ib()
 
     @_log.default
     def _initlog(self) -> logger.Logger:
         return logger.new(LuaMod.__class__.__name__)
 
     @_luart.default
-    def _initluart(self) -> lupa.LuaRuntime:
-        return lupa.LuaRuntime(unpack_returned_tuples=True)
+    def _initluart(self) -> lua.LuaRuntime:
+        return lua.runtime()
 
     def _initglobals(self) -> None:
         g = self._luart.globals()

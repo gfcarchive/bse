@@ -38,3 +38,8 @@ def test_mm(script: str) -> None:
     m = mod.LuaMod(script)
     g = m._luart.globals()
     assert g.test_localizetext == "This is a Test"
+    assert g.test_localizenumber1 == "1"
+    assert g.test_localizenumber2 == "1.1"
+    assert g.test_localizenumber3 == "1.23"
+    assert g.test_localizedate1 == "Mar 31, 2020, 3:24:28 PM"
+    assert g.test_localizedate2 == "2020.03.31 AD at 15:24:28 UTC"

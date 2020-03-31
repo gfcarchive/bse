@@ -39,6 +39,16 @@ function MM.localizeDate(...--[[ [format, ]date]])
     Rückgabewert:
     String str: Datum im lokalisierten Format
     ]]
+    local nargs = #{...}
+    if nargs == 2 then
+        format, date = ...
+    elseif nargs == 1 then
+        format = nil
+        date = ...
+    else
+        error("[MM.localizeDate] Incorrect parameters. Expected ([format, ]date), found (" .. ... .. ")")
+    end
+    return bse_localize_date(date, format)
 end
 
 function MM.localizeNumber(...--[[ [format, ]num]])
@@ -54,6 +64,16 @@ function MM.localizeNumber(...--[[ [format, ]num]])
     Rückgabewert:
     String str: Zahl im lokalisierten Format
     ]]
+    local nargs = #{...}
+    if nargs == 2 then
+        format, num = ...
+    elseif nargs == 1 then
+        format = nil
+        num = ...
+    else
+        error("[MM.localizeNumber] Incorrect parameters. Expected ([format, ]num), found (" .. arg .. ")")
+    end
+    return bse_localize_number(num, format)
 end
 
 function MM.localizeAmount(...--[[ [format, ]amount[, currency] ]])
