@@ -3,7 +3,6 @@
 import pytest  # type: ignore
 from bse import mod
 from bse import path
-from schema import SchemaError  # type: ignore
 
 
 @pytest.mark.parametrize("script", [path.join("samples", "lua_webbanking_ok.lua")])
@@ -28,11 +27,11 @@ def test_webbanking_ok(script: str) -> None:
 )
 def test_missing_global(script: str) -> None:
     script = path.join(path.here(__file__), script)
-    with pytest.raises(SchemaError):
+    with pytest.raises(mod.ModError):
         mod.LuaMod(script)
 
 
-@pytest.mark.parametrize("script", [path.join("samples", "lua_webbanking_MM.lua")])
+@pytest.mark.parametrize("script", [path.join("samples", "lua_MM.lua")])
 def test_mm(script: str) -> None:
     script = path.join(path.here(__file__), script)
     m = mod.LuaMod(script)
@@ -43,3 +42,12 @@ def test_mm(script: str) -> None:
     assert g.test_localizenumber3 == "1.23"
     assert g.test_localizedate1 == "Mar 31, 2020, 3:24:28 PM"
     assert g.test_localizedate2 == "2020.03.31 AD at 15:24:28 UTC"
+
+
+@pytest.mark.parametrize(
+    "script", [path.join("samples", "lua_MM_localized_date_error.lua")]
+)
+def test_mm_error(script: str) -> None:
+    script = path.join(path.here(__file__), script)
+    with pytest.raises(mod.ModError):
+        mod.LuaMod(script)

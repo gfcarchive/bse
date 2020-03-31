@@ -2,12 +2,11 @@
 import lupa  # type: ignore
 import pytest  # type: ignore
 from bse import lua
-from schema import SchemaError  # type: ignore
 
 
 def test_webbanking_validation_error() -> None:
     luart = lupa.LuaRuntime(unpack_returned_tuples=True)
-    with pytest.raises(SchemaError):
+    with pytest.raises(lua.LuaError):
         lua.WebBanking(luart).validate()
 
 
@@ -31,6 +30,6 @@ def test_webbanking_missing(key: str) -> None:
     g = luart.globals()
     for k, v in d.items():
         g[k] = v
-    with pytest.raises(SchemaError):
+    with pytest.raises(lua.LuaError):
         wb = lua.WebBanking(luart)
         wb.validate()

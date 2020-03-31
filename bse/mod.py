@@ -3,6 +3,11 @@ import attr
 from bse import path
 from bse import logger
 from bse import lua
+from bse import error
+
+
+class ModError(Exception):
+    pass
 
 
 @attr.s
@@ -59,6 +64,7 @@ class LuaMod(Mod):
         else:
             self._luart.execute(self._script)
 
+    @error.re_raise(lua.LuaError, ModError)
     def __attrs_post_init__(self) -> None:
         self._initglobals()
         self._runprologue()

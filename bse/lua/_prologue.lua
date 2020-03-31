@@ -71,7 +71,7 @@ function MM.localizeNumber(...--[[ [format, ]num]])
         format = nil
         num = ...
     else
-        error("[MM.localizeNumber] Incorrect parameters. Expected ([format, ]num), found (" .. arg .. ")")
+        error("[MM.localizeNumber] Incorrect parameters. Expected ([format, ]num), found (" .. table.concat({...},", ") .. ")")
     end
     return bse_localize_number(num, format)
 end
