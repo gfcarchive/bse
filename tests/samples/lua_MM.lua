@@ -24,3 +24,24 @@ test_localizeamount5 = MM.localizeAmount(1.1, "EUR")
 test_urlencode1 = MM.urlencode("this is a test")
 test_urlencode2 = MM.urlencode("this is a test", "UTF-8")
 --
+test_urldecode1 = MM.urldecode("this%20is%20a%20test")
+--
+test_encoded_str1 = MM.toEncoding("UTF-8", "test")
+test_decoded_str1 = MM.fromEncoding("UTF-8", test_encoded_str1)
+test_base64_encode1 = MM.base64(test_encoded_str1)
+test_base64_decode1 = MM.base64decode(test_base64_encode1)
+--
+test_sha512 = MM.sha512("text to hash")
+test_sha256 = MM.sha256("text to hash")
+test_sha1 = MM.sha1("text to hash")
+test_md5 = MM.md5("text to hash")
+--
+test_hmac512 = MM.hmac512("secret-shared-key-goes-here", "this is the data to encrypt")
+test_hmac384 = MM.hmac384("secret-shared-key-goes-here", "this is the data to encrypt")
+test_hmac256 = MM.hmac256("secret-shared-key-goes-here", "this is the data to encrypt")
+--
+test_time = MM.time()
+--
+MM.sleep(1)
+--
+MM.printStatus(test_time)

@@ -143,9 +143,10 @@ function MM.urldecode(urlencoded)
     Rückgabewert:
     String str: Text ohne URL-Kodierung.
     ]]
+    return bse_urldecode(urlencoded)
 end
 
-function MM.toEncoding(... --[[charset, str[, bom] ]])
+function MM.toEncoding(charset, str, ...--[[ [bom] ]])
     --[[
     Konvertiert einen Text von UTF-8 zu einem anderen Zeichensatz.
 
@@ -158,6 +159,11 @@ function MM.toEncoding(... --[[charset, str[, bom] ]])
     Rückgabewert:
     Binary data: Text im angegebenen Zeichensatz
     ]]
+    local bom = ... or false
+    if bom then
+        error("[MM.toEncoding] bom flag is enabled but not supported")
+    end
+    return bse_encode_str(str, charset)
 end
 
 function MM.fromEncoding(charset, data)
@@ -171,6 +177,7 @@ function MM.fromEncoding(charset, data)
     Rückgabewert:
     String str: Text in UTF-8
     ]]
+    return bse_decode_stream(data, charset)
 end
 
 function MM.base64(data)
@@ -183,6 +190,7 @@ function MM.base64(data)
     Rückgabewert:
     String encoded: Base64-kodierte Daten
     ]]
+    return bse_base64_encode(data)
 end
 
 function MM.base64decode(encoded)
@@ -195,6 +203,7 @@ function MM.base64decode(encoded)
     Rückgabewert:
     String data: konvertierte Daten
     ]]
+    return bse_base64_decode(encoded)
 end
 
 function MM.sha512(data)
@@ -207,6 +216,7 @@ function MM.sha512(data)
     Rückgabewert:
     String digest: Hashwert als hexidezimaler String
     ]]
+    return bse_sha512(data)
 end
 
 function MM.sha256(data)
@@ -219,6 +229,7 @@ function MM.sha256(data)
     Rückgabewert:
     String digest: Hashwert als hexidezimaler String
     ]]
+    return bse_sha256(data)
 end
 
 function MM.sha1(data)
@@ -231,6 +242,7 @@ function MM.sha1(data)
     Rückgabewert:
     String digest: Hashwert als hexidezimaler String
     ]]
+    return bse_sha1(data)
 end
 
 function MM.md5(data)
@@ -243,6 +255,7 @@ function MM.md5(data)
     Rückgabewert:
     String digest: Hashwert als hexidezimaler String
     ]]
+    return bse_md5(data)
 end
 
 function MM.hmac512(key, data)
@@ -256,6 +269,7 @@ function MM.hmac512(key, data)
     Rückgabewert:
     Binary digest: Message Authentication Code als binärer String
     ]]
+    return bse_hmac512(data, key)
 end
 
 function MM.hmac384(key, data)
@@ -269,6 +283,7 @@ function MM.hmac384(key, data)
     Rückgabewert:
     Binary digest: Message Authentication Code als binärer String
     ]]
+    return bse_hmac384(data, key)
 end
 
 function MM.hmac256(key, data)
@@ -282,6 +297,7 @@ function MM.hmac256(key, data)
     Rückgabewert:
     Binary digest: Message Authentication Code als binärer String
     ]]
+    return bse_hmac256(data, key)
 end
 
 function MM.time()
@@ -292,6 +308,7 @@ function MM.time()
     Rückgabewert:
     Number timestamp: Aktuelle Uhrzeit in Form eines POSIX-Zeitstempels.
     ]]
+    return bse_time()
 end
 
 function MM.sleep(seconds)
@@ -301,6 +318,7 @@ function MM.sleep(seconds)
     Parameter:
     Number seconds: Anzahl der Sekunden
     ]]
+    bse_sleep(seconds)
 end
 
 function MM.printStatus(...)
@@ -309,5 +327,5 @@ function MM.printStatus(...)
     zu einem String konvertiert und im Protokoll-Fenster von MoneyMoney angezeigt. Zusätzlich wird der String als
     Statusmeldung in der GUI angezeigt.
     ]]
-    print(arg)
+    print(...)
 end

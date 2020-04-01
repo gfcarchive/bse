@@ -20,4 +20,18 @@ def runtime() -> LuaRuntime:
     g["bse_localize_date"] = _globals.bse_localize_date
     g["bse_localize_amount"] = _globals.bse_localize_amount
     g["bse_urlencode"] = _globals.bse_urlencode
+    g["bse_urldecode"] = _globals.bse_urldecode
+    g["bse_encode_str"] = _globals.bse_encode_str
+    g["bse_decode_stream"] = _globals.bse_decode_stream
+    g["bse_base64_encode"] = _globals.bse_base64_encode
+    g["bse_base64_decode"] = _globals.bse_base64_decode
+    g["bse_sha512"] = _globals.bse_sha512
+    g["bse_sha256"] = _globals.bse_sha256
+    g["bse_sha1"] = _globals.bse_sha1
+    g["bse_md5"] = _globals.bse_md5
+    g["bse_hmac512"] = _globals.bse_hmac512
+    g["bse_hmac384"] = _globals.bse_hmac384
+    g["bse_hmac256"] = _globals.bse_hmac256
+    g["bse_time"] = _globals.bse_time
+    g["bse_sleep"] = _globals.bse_sleep
     return luart

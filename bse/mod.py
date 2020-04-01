@@ -3,7 +3,6 @@ import attr
 from bse import path
 from bse import logger
 from bse import lua
-from bse import error
 
 
 class ModError(Exception):
@@ -64,12 +63,14 @@ class LuaMod(Mod):
         else:
             self._luart.execute(self._script)
 
-    @error.re_raise(lua.LuaError, ModError)
     def __attrs_post_init__(self) -> None:
-        self._initglobals()
-        self._runprologue()
-        self._runscript()
-        self._initattrs()
+        try:
+            self._initglobals()
+            self._runprologue()
+            self._runscript()
+            self._initattrs()
+        except lua.LuaError as e:
+            raise ModError(e)
 
 
 def load() -> None:
