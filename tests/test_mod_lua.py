@@ -2,8 +2,7 @@
 
 from unittest import mock
 import pytest  # type: ignore
-from bse import mod
-from bse import path
+from bse import mod, path, __version__
 
 
 @pytest.mark.parametrize("script", [path.join("samples", "lua_webbanking_ok.lua")])
@@ -38,6 +37,11 @@ def test_mm(script: str) -> None:
     with mock.patch("time.sleep") as mockts:
         m = mod.LuaMod(script)
         g = m._luart.globals()
+        #
+        mockts.assert_called_once_with(1)
+        #
+        assert g.test_product_name == "bse"
+        assert g.test_product_version == __version__
         #
         assert g.test_localizetext == "This is a Test"
         #
@@ -93,7 +97,6 @@ def test_mm(script: str) -> None:
         )
         #
         assert len(str(g.test_time)) == 13  # length for timestamp with milliseconds
-        mockts.assert_called_once_with(1)
 
 
 @pytest.mark.parametrize(

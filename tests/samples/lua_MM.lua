@@ -6,6 +6,9 @@ WebBanking {
 }
 
 --
+test_product_name = MM.productName
+test_product_version = MM.productVersion
+--
 test_localizetext = string.format(MM.localizeText("This is a %s"), "Test")
 --
 test_localizenumber1 = MM.localizeNumber(1)

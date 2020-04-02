@@ -1,4 +1,4 @@
-attr>=19.3
+attrs>=19.3
 Babel>=2.8
 Click>=7.0
 lupa>=1.9

@@ -7,8 +7,7 @@ function WebBanking (arg)
     description = arg.description
 end
 
--- TODO implement proper version update
-MM = {productName = "bse", productVersion="0.1.0"}
+MM = {productName = "bse", productVersion=bse_version()}
 
 function MM.localizeText(str)
     --[[

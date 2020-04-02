@@ -16,6 +16,7 @@ def runtime() -> LuaRuntime:
     luart = LuaRuntime(unpack_returned_tuples=True)
     g = luart.globals()
     g["print"] = _globals.bse_print
+    g["bse_version"] = _globals.bse_version
     g["bse_localize_number"] = _globals.bse_localize_number
     g["bse_localize_date"] = _globals.bse_localize_date
     g["bse_localize_amount"] = _globals.bse_localize_amount

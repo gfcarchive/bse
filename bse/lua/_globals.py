@@ -11,6 +11,7 @@ import time
 from babel.numbers import format_decimal, format_currency  # type: ignore
 from babel.dates import format_datetime  # type: ignore
 from bse import logger
+from bse import __version__
 from datetime import datetime
 from typing import Any
 from urllib.parse import quote, unquote
@@ -18,6 +19,10 @@ from urllib.parse import quote, unquote
 
 def _log() -> logger.Logger:
     return logger.new(inspect.stack()[1][3])
+
+
+def bse_version() -> str:
+    return __version__
 
 
 def bse_print(*args: Any) -> None:
