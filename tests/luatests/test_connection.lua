@@ -1,9 +1,4 @@
-WebBanking {
-  version = 1.0,
-  url = "http://www.jsontest.com", -- this is a nice service to test json
-  services = {"Service Name"},
-  description = "this is a description",
-}
+Test { description = "Testing Connection utility function" }
 
 local echo_url = "http://echo.jsontest.com/key/value/k/v"
 local conn = Connection()
