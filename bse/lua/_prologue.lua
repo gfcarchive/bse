@@ -5,13 +5,26 @@
 --
 --    - Sets global variables
 --    - All scripts must include one such call
---    - These fields are mandatory but lupa erros are very confusing, so I will manage them in the bse.lua module
 --
 --]]
 function WebBanking (arg)
     version = arg.version
     url = arg.url
     services = arg.services
+    description = arg.description
+end
+
+--[[
+--
+--    Definition: Test Function
+--    -------------------------------
+--
+--    - Sets global variables
+--    - Interesting for lua tests
+--
+--]]
+function Test (arg)
+    version = bse_version()
     description = arg.description
 end
 

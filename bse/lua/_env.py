@@ -34,7 +34,9 @@ def _version(v: Optional[Union[int, float, str]]) -> str:
         return __version__
     if isinstance(v, float):
         return str(v)
-    return f"{v:.1f}"
+    if isinstance(v, int):
+        return f"{v:.1f}"
+    return v
 
 
 def _validate(env: Dict[str, str]) -> None:
