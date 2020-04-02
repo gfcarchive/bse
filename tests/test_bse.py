@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/env python
 
 """Tests for `bse` package."""
 
@@ -7,7 +6,7 @@ import pytest  # type: ignore
 
 from click.testing import CliRunner
 
-from bse import bse
+# from bse import bse
 from bse import cli
 
 

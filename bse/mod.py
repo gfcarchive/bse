@@ -3,6 +3,7 @@ import attr
 from bse import path
 from bse import logger
 from bse import lua
+from typing import Optional
 
 
 class ModError(Exception):
@@ -11,8 +12,8 @@ class ModError(Exception):
 
 @attr.s
 class Mod(object):
-    version: float = attr.ib(init=False)
-    url: str = attr.ib(init=False)
+    version: str = attr.ib(init=False)
+    url: Optional[str] = attr.ib(init=False)
     description: str = attr.ib(init=False)
     name: str = attr.ib(init=False)
     slug: str = attr.ib(init=False)
@@ -45,16 +46,12 @@ class LuaMod(Mod):
         self._luart.execute(lua.prologue())
 
     def _initattrs(self) -> None:
-        wb = lua.WebBanking(self._luart)
-        wb.validate()
-        d = wb.scope()
+        d = lua.environment(self._luart)
 
-        # lupa converts 1.0 into 1. REMINDER: lua only has float numbers
-        self.version = float(d["version"])
-
-        self.url = d["url"]
+        self.version = d["version"]
+        self.url = d.get("url")
         self.description = d["description"]
-        self.name = d["services"][1]
+        self.name = d["name"]
         self.slug = d["extensionName"]
 
     def _runscript(self) -> None:

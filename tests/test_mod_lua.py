@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from unittest import mock
 import pytest  # type: ignore
 from bse import mod, path, __version__
+from glob import glob
+from unittest import mock
 
 
 @pytest.mark.parametrize("script", [path.join("samples", "lua_webbanking_ok.lua")])
-def test_webbanking_ok(script: str) -> None:
+def test_mod_init(script: str) -> None:
     script = path.join(path.here(__file__), script)
     m = mod.LuaMod(script)
-    assert m.version == 1.0
+    assert m.version == "1.0"
     assert m.url == "https://www.mysite.com"
     assert m.description == "Service Description"
     assert m.name == "Service Name"
@@ -17,18 +18,21 @@ def test_webbanking_ok(script: str) -> None:
 
 
 @pytest.mark.parametrize(
-    "script",
-    [
-        path.join("samples", "lua_webbanking_no_description.lua"),
-        path.join("samples", "lua_webbanking_no_url.lua"),
-        path.join("samples", "lua_webbanking_no_version.lua"),
-        path.join("samples", "lua_webbanking_no_services.lua"),
-    ],
+    "script", [path.join("samples", "lua_webbanking_no_description.lua")]
 )
 def test_missing_global(script: str) -> None:
     script = path.join(path.here(__file__), script)
     with pytest.raises(mod.ModError):
         mod.LuaMod(script)
+
+
+@pytest.mark.parametrize("script", [path.join("samples", "lua_webbanking_min.lua")])
+def test_default_global(script: str) -> None:
+    script = path.join(path.here(__file__), script)
+    m = mod.LuaMod(script)
+    assert m.version == __version__
+    assert m.url is None
+    assert m.name == m.slug
 
 
 @pytest.mark.parametrize("script", [path.join("samples", "lua_MM.lua")])
@@ -111,3 +115,11 @@ def test_mm_error(script: str) -> None:
     script = path.join(path.here(__file__), script)
     with pytest.raises(mod.ModError):
         mod.LuaMod(script)
+
+
+@pytest.mark.parametrize(
+    "script", glob(path.join(path.here(__file__), "luatests", "test*.lua"))
+)
+def test_lua_tests(script: str) -> None:
+    script = path.join(path.here(__file__), script)
+    mod.LuaMod(script)

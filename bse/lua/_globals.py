@@ -12,6 +12,8 @@ from babel.numbers import format_decimal, format_currency  # type: ignore
 from babel.dates import format_datetime  # type: ignore
 from bse import logger
 from bse import __version__
+from bse.lua._connection import Connection
+from bse.lua._json import JSON
 from datetime import datetime
 from typing import Any
 from urllib.parse import quote, unquote
@@ -155,3 +157,11 @@ def bse_time() -> int:
 def bse_sleep(seconds: int) -> None:
     _log().debug(f"seconds: {seconds}")
     time.sleep(seconds)
+
+
+def bse_connection() -> Connection:
+    return Connection()
+
+
+def bse_json(json: str = None) -> JSON:
+    return JSON(json)

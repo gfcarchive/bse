@@ -35,4 +35,6 @@ def runtime() -> LuaRuntime:
     g["bse_hmac256"] = _globals.bse_hmac256
     g["bse_time"] = _globals.bse_time
     g["bse_sleep"] = _globals.bse_sleep
+    g["bse_connection"] = _globals.bse_connection
+    g["bse_json"] = _globals.bse_json
     return luart
