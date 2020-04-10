@@ -95,3 +95,5 @@ mypy: ## runs mypy
 
 mm-extensions: ## downloads MoneyMoney Extensions from https://moneymoney-app.com/extensions/
 > curl -s https://moneymoney-app.com/extensions/ | grep "href=\"/extensions/[^\"]*\"" | awk -F'href=' '{print $$2}' | awk -F '"' '{print $$2}' | xargs -I {} curl -s https://moneymoney-app.com{} -o tests{}
+
+check-all: test mypy lint ## Runs tests, mypy and linter in one go

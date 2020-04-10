@@ -46,7 +46,7 @@ class Connection(object):
         charset = (resp.encoding or resp.apparent_encoding or "").upper()
 
         # content, charset, mimeType, filename, headers
-        return (resp.text, charset, mime_type, filename, resp.headers)
+        return (resp.text, charset, mime_type, filename, self._topydict(resp.headers))
 
     def _request(
         self,
@@ -62,23 +62,27 @@ class Connection(object):
             resp = req(url)
         return resp
 
-    def _topydict(self, luadict: Dict[str, str]) -> Dict[str, str]:
+    def _topydict(
+        self, d: Union[Dict[str, Any], requests.structures.CaseInsensitiveDict, None]
+    ) -> Dict[str, str]:
         """
         The headers object return by Lua is not a fully functional dictionary and some methods
         do ont exist. This method performs the conversion
         """
-        if luadict:
-            return {k: v for k, v in luadict.items()}
+        if d:
+            return {k: v for k, v in d.items()}
         return {}
 
     def _parse_content(
-        self, post_content: Union[str, Dict[str, Any]]
+        self, post_content: Union[str, Dict[str, Any], None]
     ) -> Dict[str, str]:
         """
         if a string, post_content comes in the form: a=this%20is%20a%20test&abc=ddd
         """
+        if not post_content:
+            return {}
         if isinstance(post_content, str):
-            return parse.parse_qs(
+            post_content = parse.parse_qs(
                 post_content, keep_blank_values=True, strict_parsing=True
             )
         return self._topydict(post_content)

@@ -93,7 +93,10 @@ def test_mm(script: str) -> None:
         )
         assert (
             g.test_hmac384
-            == "87cae1d0fe8fef5c3c2c0cfb9ca06d99b8a6267084308c41c73b2c2aa638b94f7c43c3ba62aeffb2cf909ccc987df13b".upper()
+            == (
+                "87cae1d0fe8fef5c3c2c0cfb9ca06d99b8a6267084308c41c73b2c2aa638b94f7c43c3ba62aeffb2cf909c"
+                + "cc987df13b"
+            ).upper()
         )
         assert (
             g.test_hmac256
