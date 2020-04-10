@@ -45,7 +45,7 @@ LocalStorage = {}
 --    - The MM object is a collection of util methods to ease the development of lua plugins
 --
 --]]
-MM = {productName = "bse", productVersion=bse_version()}
+MM = {productName = "BSE", productVersion=bse_version()}
 
 function MM.localizeText(str)
     -- Mit dieser Funktion kann ein Text übersetzt werden. Diese Funktion ist primär für die mit MoneyMoney

@@ -44,7 +44,7 @@ def test_mm(script: str) -> None:
         #
         mockts.assert_called_once_with(1)
         #
-        assert g.test_product_name == "bse"
+        assert g.test_product_name == "BSE"
         assert g.test_product_version == __version__
         #
         assert g.test_localizetext == "This is a Test"

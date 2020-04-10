@@ -84,5 +84,8 @@ dist: clean ## builds source and wheel package
 install: clean ## install the package to the active Python's site-packages
 	python setup.py install
 
-mypy: ## runts mypy
+mypy: ## runs mypy
 	mypy --check-untyped-defs --disallow-untyped-calls --disallow-untyped-defs --disallow-incomplete-defs .
+
+mm-extensions: ## downloads MoneyMoney Extensions from https://moneymoney-app.com/extensions/
+	curl -s https://moneymoney-app.com/extensions/ | grep "href=\"/extensions/[^\"]*\"" | awk -F'href=' '{print $$2}' | awk -F '"' '{print $$2}' | xargs -I {} curl -s https://moneymoney-app.com{} -o tests{}
