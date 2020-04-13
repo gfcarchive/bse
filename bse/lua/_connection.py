@@ -83,7 +83,7 @@ class Connection(object):
             return {}
         if isinstance(post_content, str):
             post_content = parse.parse_qs(
-                post_content, keep_blank_values=True, strict_parsing=True
+                post_content, keep_blank_values=True, strict_parsing=False
             )
         return self._topydict(post_content)
 

@@ -1,11 +1,11 @@
 Test { description = "Testing Connection utility function" }
 
-local echo_url = "http://echo.jsontest.com/key/value/k/v"
+local url = "https://postman-echo.com/get?k=v"
 local conn = Connection()
-local jsonText, charset, mimeType, filename, headers = conn:request("GET", echo_url)
+local jsonText, charset, mimeType, filename, headers = conn:request("GET", url)
 local json = JSON(jsonText):dictionary()
-assert(json["k"] == "v")
-assert(charset == "ASCII")
+assert(json["args"]["k"] == "v")
+assert(charset == "UTF-8")
 assert(mimeType == "application/json")
 assert(filename == "")
-assert(headers["Content-Length"] == "" .. #jsonText)
+assert(tonumber(headers["Content-Length"]) > 0)

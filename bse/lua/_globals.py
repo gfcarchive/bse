@@ -53,13 +53,15 @@ def bse_localize_amount(n: float, currency: str = None, format: str = None) -> s
     return format_decimal(n, locale="en_US")
 
 
-def bse_urlencode(s: str, charset: str = None) -> str:
-    _log().debug(f"s: {s}, charset: {charset}")
+def bse_urlencode(o: Any, charset: str = None) -> str:
+    _log().debug(f"o: {o}, charset: {charset}")
+    if not isinstance(o, str):
+        o = str(o)
     if not charset:
         charset = "iso-8859-1"
     else:
         charset = charset.lower()
-    return quote(s, encoding=charset)
+    return quote(o, encoding=charset)
 
 
 def bse_urldecode(s: str) -> str:
