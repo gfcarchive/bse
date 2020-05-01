@@ -15,6 +15,7 @@ class ResponseError(Exception):
 class Connection(object):
 
     _log: logger.Logger = attr.ib()
+    _baseurl: str = attr.ib(default=attr.Factory(str))
 
     @_log.default
     def _initlog(self) -> logger.Logger:
@@ -29,6 +30,8 @@ class Connection(object):
         headers: Dict[str, str] = None,
     ) -> Tuple[str, str, str, str, Dict[str, str]]:
         self._log.debug(f"Request [{method}]: {url}")
+
+        url = self._parse_url(url)
 
         self._check_http_method(method)
 
@@ -47,6 +50,17 @@ class Connection(object):
 
         # content, charset, mimeType, filename, headers
         return (resp.text, charset, mime_type, filename, self._topydict(resp.headers))
+
+    def _parse_url(self, url: str) -> str:
+        if not self._baseurl:
+            self._baseurl = url
+            self._log.debug(f"Future BaseUrl: {url}")
+        else:
+            new_url = parse.urljoin(self._baseurl, url)
+            if new_url != url:
+                self._log.debug(f"URL merging: {self._baseurl} + {url} = {new_url}")
+            url = new_url
+        return url
 
     def _request(
         self,
