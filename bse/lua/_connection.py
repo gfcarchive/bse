@@ -21,6 +21,20 @@ class Connection(object):
     def _initlog(self) -> logger.Logger:
         return logger.new(self.__class__.__name__)
 
+    def get(self,
+        url: str,
+    ) -> Tuple[str, str, str, str, Dict[str, str]]:
+        return self.request("GET", url)
+
+
+    def post(self,
+        url: str,
+        post_content: Union[str, Dict[str, Any]] = None,
+        post_content_type: str = None,
+    ) -> Tuple[str, str, str, str, Dict[str, str]]:
+        return self.request("POST", url, post_content=post_content, post_content_type=post_content_type)
+
+
     def request(
         self,
         method: str,
