@@ -18,7 +18,7 @@ class Connection(object):
     _baseurl: str = attr.ib(default=attr.Factory(str))
     _cookiestr: str = attr.ib(default=attr.Factory(str))
     _session: requests.Session = attr.ib(default=attr.Factory(requests.Session))
-    useragent: str = attr.ib(default=requests.utils.default_user_agent())
+    useragent: str = attr.ib(default=requests.utils.default_user_agent())  # type: ignore
     language: str = attr.ib(default="en-US")
 
     @_log.default
