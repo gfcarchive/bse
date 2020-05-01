@@ -13,6 +13,7 @@ local headers = {}
 -- headers["Accept"] = "application/json"
 
 local conn = Connection()
+conn:setCookie("SESSION=foobar; path=/")
 local jsonText = conn:request("POST", url, parameters, nil, headers)
 
 local json = JSON(jsonText):dictionary()

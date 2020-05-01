@@ -16,21 +16,20 @@ class Connection(object):
 
     _log: logger.Logger = attr.ib()
     _baseurl: str = attr.ib(default=attr.Factory(str))
+    _cookiestr: str = attr.ib(default=attr.Factory(str))
+    _session: requests.Session = attr.ib(default=attr.Factory(requests.Session))
 
     @_log.default
     def _initlog(self) -> logger.Logger:
         return logger.new(self.__class__.__name__)
 
-    def get(self,
-        url: str,
-    ) -> Tuple[str, str, str, str, Dict[str, str]]:
+    def get(self, url: str) -> Tuple[str, str, str, str, Dict[str, str]]:
         return self.request("GET", url)
 
     def post(self,
-        url: str,
-        post_content: Union[str, Dict[str, Any]] = None,
-        post_content_type: str = None,
-    ) -> Tuple[str, str, str, str, Dict[str, str]]:
+             url: str,
+             post_content: Union[str, Dict[str, Any]] = None,
+             post_content_type: str = None) -> Tuple[str, str, str, str, Dict[str, str]]:
         return self.request("POST", url, post_content=post_content, post_content_type=post_content_type)
 
     def request(
@@ -47,10 +46,15 @@ class Connection(object):
 
         self._check_http_method(method)
 
+        if self._cookiestr:
+            headers = headers or {}
+            headers["Cookie"] = self._cookiestr
+
         headers = self._topydict(headers)
         post_content = self._parse_content(post_content)
 
         resp = self._request(method, url, post_content, headers)
+        self._log.debug(f"Cookies: {self._session.cookies}")
 
         self._log.debug(f"Response status code: {resp.status_code}")
         self._check_response(resp, headers, url)
@@ -64,10 +68,16 @@ class Connection(object):
         return (resp.text, charset, mime_type, filename, self._topydict(resp.headers))
 
     def close(self) -> None:
-        pass
+        self._session.close()
 
     def getBaseURL(self) -> str:
         return self._baseurl
+
+    def setCookie(self, cookiestr: str) -> None:
+        self._cookiestr = cookiestr
+
+    def getCookies(self) -> Dict[str, str]:
+        return self._session.cookies.get_dict()  # type: ignore
 
     def _parse_url(self, url: str) -> str:
         if not self._baseurl:
@@ -87,7 +97,7 @@ class Connection(object):
         post_content: Dict[str, str],
         headers: Dict[str, str],
     ) -> requests.Response:
-        req = getattr(requests, method.lower())
+        req = getattr(self._session, method.lower())
         if post_content:
             resp = req(url, data=post_content)
         else:
