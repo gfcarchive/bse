@@ -18,6 +18,8 @@ class Connection(object):
     _baseurl: str = attr.ib(default=attr.Factory(str))
     _cookiestr: str = attr.ib(default=attr.Factory(str))
     _session: requests.Session = attr.ib(default=attr.Factory(requests.Session))
+    useragent: str = attr.ib(default=requests.utils.default_user_agent())
+    language: str = attr.ib(default="en-US")
 
     @_log.default
     def _initlog(self) -> logger.Logger:
@@ -46,11 +48,11 @@ class Connection(object):
 
         self._check_http_method(method)
 
-        if self._cookiestr:
-            headers = headers or {}
-            headers["Cookie"] = self._cookiestr
-
         headers = self._topydict(headers)
+        if self._cookiestr:
+            headers["Cookie"] = self._cookiestr
+        headers.update({"Accept-Language": self.language, "User-Agent": self.useragent})
+
         post_content = self._parse_content(post_content)
 
         resp = self._request(method, url, post_content, headers)
