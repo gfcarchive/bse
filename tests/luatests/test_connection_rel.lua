@@ -16,3 +16,6 @@ assert(json["form"]["title"] == "title")
 jsonText = conn:request("POST", "/post", parameters, nil, headers)
 json = JSON(jsonText):dictionary()
 assert(json["form"]["title"] == "title")
+
+assert(conn:getBaseURL() == url)
+conn:close()

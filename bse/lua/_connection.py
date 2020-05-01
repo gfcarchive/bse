@@ -26,14 +26,12 @@ class Connection(object):
     ) -> Tuple[str, str, str, str, Dict[str, str]]:
         return self.request("GET", url)
 
-
     def post(self,
         url: str,
         post_content: Union[str, Dict[str, Any]] = None,
         post_content_type: str = None,
     ) -> Tuple[str, str, str, str, Dict[str, str]]:
         return self.request("POST", url, post_content=post_content, post_content_type=post_content_type)
-
 
     def request(
         self,
@@ -65,15 +63,21 @@ class Connection(object):
         # content, charset, mimeType, filename, headers
         return (resp.text, charset, mime_type, filename, self._topydict(resp.headers))
 
+    def close(self) -> None:
+        pass
+
+    def getBaseURL(self) -> str:
+        return self._baseurl
+
     def _parse_url(self, url: str) -> str:
         if not self._baseurl:
             self._baseurl = url
             self._log.debug(f"Future BaseUrl: {url}")
         else:
-            new_url = parse.urljoin(self._baseurl, url)
-            if new_url != url:
-                self._log.debug(f"URL merging: {self._baseurl} + {url} = {new_url}")
-            url = new_url
+            self._baseurl = parse.urljoin(self._baseurl, url)
+            if self._baseurl != url:
+                self._log.debug(f"URL merging: {url} -> {self._baseurl}")
+            url = self._baseurl
         return url
 
     def _request(
