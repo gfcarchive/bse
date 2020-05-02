@@ -57,7 +57,7 @@ lint: ## check style with flake8
 > flake8 bse tests
 
 test: ## run tests quickly with the default Python
-> pytest
+> pytest -vv
 
 test-all: ## run tests on every Python version with tox
 > tox
@@ -94,6 +94,7 @@ mypy: ## runs mypy
 > mypy --check-untyped-defs --disallow-untyped-calls --disallow-untyped-defs --disallow-incomplete-defs .
 
 mm-extensions: ## downloads MoneyMoney Extensions from https://moneymoney-app.com/extensions/
+> mkdir -p tests/extensions
 > curl -s https://moneymoney-app.com/extensions/ | grep "href=\"/extensions/[^\"]*\"" | awk -F'href=' '{print $$2}' | awk -F '"' '{print $$2}' | xargs -I {} curl -s https://moneymoney-app.com{} -o tests{}
 
-check-all: test mypy lint ## Runs tests, mypy and linter in one go
+check-all: test mypy lint coverage ## Runs tests, mypy and linter in one go
