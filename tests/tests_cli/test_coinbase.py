@@ -18,6 +18,6 @@ Commands:
 
 def test_coinbase_help() -> None:
     runner = CliRunner()
-    result = runner.invoke(cli.cmd_root, 'coinbase --help')
+    result = runner.invoke(cli.main, "coinbase --help")
     assert result.exit_code == 0
     assert result.output == _coinbase_help

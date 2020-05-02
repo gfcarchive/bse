@@ -20,6 +20,6 @@ Commands:
 
 def test_root_help() -> None:
     runner = CliRunner()
-    help_result = runner.invoke(cli.cmd_root, ["--help"])
+    help_result = runner.invoke(cli.main, ["--help"])
     assert help_result.exit_code == 0
     assert help_result.output == _root_help

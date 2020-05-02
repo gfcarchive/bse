@@ -13,7 +13,7 @@ _cfg = f"""{{
 def test_config() -> None:
     """Test the config command"""
     runner = CliRunner()
-    result = runner.invoke(cli.cmd_root, 'config')
+    result = runner.invoke(cli.main, "config")
     assert result.exit_code == 0
     assert result.output == _cfg
 
@@ -29,6 +29,6 @@ Options:
 
 def test_config_help() -> None:
     runner = CliRunner()
-    result = runner.invoke(cli.cmd_root, 'config --help')
+    result = runner.invoke(cli.main, "config --help")
     assert result.exit_code == 0
     assert result.output == _cfg_help
