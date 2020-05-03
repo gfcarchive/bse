@@ -1,17 +1,24 @@
 # -*- coding: utf-8 -*-
 
 import click
-from ._main import main
+from bse import config
+from bse.engine import Engine
+from bse.mod import ModType
 from typing import Dict
 
 
-@main.group(name="coinbase")
+@click.group(name="coinbase")
 @click.pass_context
-def cmd_coinbase(ctx: click.Context) -> None:
+def grp_coinbase(ctx: click.Context) -> None:
     """Access Coinbase account and transaction data"""
+    pass
 
 
-@cmd_coinbase.command(name="accounts")
+@grp_coinbase.command(name="accounts")
 @click.pass_obj
 def cmd_accounts(obj: Dict[str, str]) -> int:
-    pass
+    """Retrieves the list of accounts"""
+    conf = config.new(obj)
+    with Engine(ModType.Coinbase, conf) as e:
+        click.echo(f"{e}: I am in!")
+    return 0

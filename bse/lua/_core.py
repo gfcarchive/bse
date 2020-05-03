@@ -6,15 +6,19 @@ directly the lupa module
 
 import lupa  # type: ignore
 from . import _globals
+from bse import logger
 from typing import Any
 
 LuaRuntime: Any = lupa.LuaRuntime
 LuaError: Any = lupa.LuaError
 
 
-def runtime() -> LuaRuntime:
+def runtime(slug: str, log: logger.Logger) -> LuaRuntime:
     luart = LuaRuntime(unpack_returned_tuples=True)
     g = luart.globals()
+    g["ProtocolWebBanking"] = "MoneyMoney Plugin"
+    g["extensionName"] = slug
+    g["bse_log"] = log
     g["print"] = _globals.bse_print
     g["bse_version"] = _globals.bse_version
     g["bse_localize_number"] = _globals.bse_localize_number

@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+import abc
 import attr
 from bse import path
 from bse import logger
 from bse import lua
+from bse import model
+from enum import Enum
 from typing import Optional
 
 
@@ -11,12 +14,16 @@ class ModError(Exception):
 
 
 @attr.s
-class Mod(object):
+class Mod(abc.ABC):
     version: str = attr.ib(init=False)
     url: Optional[str] = attr.ib(init=False)
     description: str = attr.ib(init=False)
     name: str = attr.ib(init=False)
     slug: str = attr.ib(init=False)
+
+    @abc.abstractmethod
+    def initsession(self, creds: model.Credential) -> None:
+        pass
 
 
 @attr.s
@@ -24,35 +31,31 @@ class LuaMod(Mod):
 
     _script: str = attr.ib()  # _script could be either a file path, or a text to execute
     _log: logger.Logger = attr.ib()
-    _luart: lua.LuaRuntime = attr.ib()
+    _luart: lua.LuaRuntime = attr.ib(init=False)
+    _protocol: str = attr.ib(init=False)
 
     @_log.default
     def _initlog(self) -> logger.Logger:
-        return logger.new(LuaMod.__class__.__name__)
+        return logger.new(self.__class__.__name__)
 
-    @_luart.default
-    def _initluart(self) -> lua.LuaRuntime:
-        return lua.runtime()
-
-    def _initglobals(self) -> None:
-        g = self._luart.globals()
+    def _initruntime(self) -> None:
         if path.exists(self._script):
-            g.extensionName = path.fname(self._script)
+            self.slug = path.fname(self._script)
         else:
-            g.extensionName = "string"
-        g["bse_log"] = self._log
+            self.slug = "string"
+        self._luart = lua.runtime(self.slug, self._log)
 
     def _runprologue(self) -> None:
         self._luart.execute(lua.prologue())
 
     def _initattrs(self) -> None:
-        d = lua.environment(self._luart)
+        d = lua.descriptor(self._luart)
 
-        self.version = d["version"]
-        self.url = d.get("url")
-        self.description = d["description"]
-        self.name = d["name"]
-        self.slug = d["extensionName"]
+        self.version = d.version
+        self.url = d.url
+        self.description = d.description
+        self.name = d.name
+        self._protocol = d.protocol
 
     def _runscript(self) -> None:
         if path.exists(self._script):
@@ -62,13 +65,30 @@ class LuaMod(Mod):
 
     def __attrs_post_init__(self) -> None:
         try:
-            self._initglobals()
+            self._initruntime()
             self._runprologue()
             self._runscript()
             self._initattrs()
         except lua.LuaError as e:
             raise ModError(e)
 
+    def initsession(self, creds: model.Credential) -> None:
+        g = self._luart.globals()
+        raise NotImplementedError("TODO: implement once we have test credentials")
+        g.InitializeSession(
+            self._protocol, self.name, creds.username, None, creds.password, None
+        )
 
-def load() -> None:
-    pass
+
+class ModType(Enum):
+    Coinbase = "Coinbase"
+
+    def script(self) -> str:
+        if self == ModType.Coinbase:
+            return path.join(path.here(__file__), "scripts", "Coinbase.lua")
+        raise NotImplementedError(f"Module Type {self} is not configured")
+
+
+def modload(modtype: ModType) -> Mod:
+    script = modtype.script()
+    return LuaMod(script)

@@ -4,19 +4,23 @@ import pytest  # type: ignore
 from bse import lua
 
 
-def test_environment_not_initialized() -> None:
+def test_descriptor_not_initialized() -> None:
     luart = lupa.LuaRuntime(unpack_returned_tuples=True)
     with pytest.raises(lua.LuaError):
-        lua.environment(luart)
+        lua.descriptor(luart)
 
 
-_env_d = {"description": "this is just a description", "extensionName": "string"}
+_descr_d = {
+    "ProtocolWebBanking": "Protocol",
+    "description": "this is just a description",
+    "extensionName": "string",
+}
 
 
-def test_min_env() -> None:
+def test_min_descriptor() -> None:
     luart = lupa.LuaRuntime(unpack_returned_tuples=True)
     g = luart.globals()
-    for k, v in _env_d.items():
+    for k, v in _descr_d.items():
         g[k] = v
-    env = lua.environment(luart)
-    assert env["name"] == env["extensionName"]
+    descriptor = lua.descriptor(luart)
+    assert descriptor.name == _descr_d["extensionName"]
