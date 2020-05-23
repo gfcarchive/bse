@@ -65,6 +65,23 @@ def _mocked_coinbase_request(
     return None
 
 
+_coinbase_accounts = """[
+    {
+        "bankCode": "",
+        "bic": "",
+        "currency": "EUR",
+        "iban": "",
+        "name": "Coinbase",
+        "number": "Main",
+        "owner": "",
+        "portfolio": true,
+        "subAccount": "",
+        "type": "Portfolio"
+    }
+]
+"""
+
+
 def test_coinbase_accounts(mocker) -> None:
     mocker.patch("bse.lua._globals.bse_time", return_value=1_590_067_388)
     mocker.patch(
@@ -74,17 +91,6 @@ def test_coinbase_accounts(mocker) -> None:
 
     runner = CliRunner()
     result = runner.invoke(cli.main, f"--netrc {netrc} coinbase accounts")
-    assert isinstance(result.exception, NotImplementedError)
     traceback.print_exception(*result.exc_info)
-    assert result.exit_code == 1
-
-
-# this is only for me to test the real service. I will delete once I am done with the tests
-# def test_real_run() -> None:
-#    netrc = path.join(path.here(__file__), "..", "test.netrc")
-#    netrc = defaults.NETRC
-#    runner = CliRunner()
-#    result = runner.invoke(cli.main, f"--netrc {netrc} coinbase accounts")
-#    assert isinstance(result.exception, NotImplementedError)
-#    traceback.print_exception(*result.exc_info)
-#    assert result.exit_code == 1
+    assert result.exit_code == 0
+    assert result.output == _coinbase_accounts

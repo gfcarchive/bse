@@ -6,7 +6,7 @@ from bse import logger
 from bse import lua
 from bse import model
 from enum import Enum
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
 
 class ModError(Exception):
@@ -23,6 +23,10 @@ class Mod(abc.ABC):
 
     @abc.abstractmethod
     def initsession(self, creds: model.Credential) -> None:
+        pass
+
+    @abc.abstractmethod
+    def accounts(self) -> List[model.Account]:
         pass
 
 
@@ -77,6 +81,22 @@ class LuaMod(Mod):
         g.InitializeSession(
             self._protocol, self.name, creds.username, None, creds.password, None
         )
+
+    def _new_account(self, a: Dict[str, Any]) -> model.Account:
+        return model.Account(
+            name=a["name"],
+            portfolio=a["portfolio"],
+            number=a["accountNumber"],
+            currency=a["currency"],
+            type=model.AccountType.moneymoneymap(a["type"]),
+        )
+
+    def accounts(self) -> List[model.Account]:
+        g = self._luart.globals()
+        luaaccounts = g.ListAccounts(None)
+        acclist = [self._new_account(a) for _, a in luaaccounts.items()]
+        self._log.debug(acclist, extra={"context": "[Accounts]"})
+        return acclist
 
 
 class ModType(Enum):

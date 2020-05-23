@@ -6,7 +6,7 @@ import types
 from bse import logger, mod, model
 from bse.config import Config
 from urllib.parse import urlparse
-from typing import Optional, Type
+from typing import List, Optional, Type
 
 
 @attr.s
@@ -51,8 +51,8 @@ class Engine(object):
         # do not re-raise the exception, that is responsibility of the caller
         pass
 
-    def accounts(self) -> None:
-        pass
+    def accounts(self) -> List[model.Account]:
+        return self._m.accounts()
 
     def transfers(self) -> None:
         pass

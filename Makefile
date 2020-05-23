@@ -58,6 +58,7 @@ lint: ## check style with flake8
 
 test: ## run tests quickly with the default Python
 > pytest -vv $(PYTEST_OPTS)
+# ex: PYTEST_OPTS="-k 'test_mod'" make test
 
 test-all: ## run tests on every Python version with tox
 > tox

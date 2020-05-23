@@ -3,6 +3,7 @@
 import click
 from bse import config, logger
 from bse.engine import Engine
+from bse.transform import Jsonable
 from bse.mod import ModType
 from typing import Dict
 
@@ -20,8 +21,8 @@ def cmd_accounts(obj: Dict[str, str]) -> int:
     """Retrieves the list of accounts"""
     try:
         conf = config.new(obj)
-        with Engine(ModType.Coinbase, conf):
-            raise NotImplementedError("TODO: implement accounts method")
+        with Engine(ModType.Coinbase, conf) as e:
+            click.echo(Jsonable.dump(e.accounts()))
         return 0
     except Exception as e:
         log = logger.new("Coinbase accounts")

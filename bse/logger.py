@@ -3,6 +3,7 @@
 import json
 import logging
 from bse import defaults
+from bse.transform import Jsonable
 from typing import Any, Dict, List
 
 
@@ -44,6 +45,13 @@ class BSELogger(logging.getLoggerClass()):  # type: ignore
                 msg = json.dumps(msg, indent=4)
             except Exception:
                 pass
+        elif isinstance(msg, list):
+            try:
+                msg = json.dumps(msg, indent=4, default=Jsonable.default)
+            except Exception:
+                pass
+        elif isinstance(msg, Jsonable):
+            msg = msg.json()
         super().debug(msg, *args, **kwargs)
 
 

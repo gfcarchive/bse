@@ -3,7 +3,7 @@
 import attr
 import netrc
 from bse import defaults
-from json import dumps
+from bse.transform import Jsonable
 from typing import Dict, Optional
 
 
@@ -16,20 +16,9 @@ class NetrcEntry(object):
 
 
 @attr.s
-class Config(object):
+class Config(Jsonable):
 
     netrc: str = attr.ib()
-
-    def json(self) -> str:
-        j = {}
-        for attrname in dir(self):
-            if attrname.startswith("_"):
-                continue
-            attr = getattr(self, attrname)
-            if callable(attr):
-                continue
-            j[attrname] = attr
-        return dumps(j, indent=4)
 
     def readrc(self, machine: str) -> NetrcEntry:
         nrc = netrc.netrc(self.netrc)
