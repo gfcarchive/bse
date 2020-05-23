@@ -5,6 +5,7 @@ import os.path
 # directly imported from os.path
 exists = os.path.exists
 join = os.path.join
+expanduser = os.path.expanduser
 
 
 # created specifically for bse

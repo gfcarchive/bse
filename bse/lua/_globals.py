@@ -15,7 +15,7 @@ from bse import __version__
 from bse.lua._connection import Connection
 from bse.lua._json import JSON
 from datetime import datetime
-from typing import Any
+from typing import Any, Callable, Union
 from urllib.parse import quote, unquote
 
 
@@ -105,53 +105,56 @@ def bse_sha512(d: str) -> str:
     _log().debug(f"len(d): {len(d)}")
     alg = hashlib.sha512()
     alg.update(d.encode())
-    return alg.hexdigest().upper()
+    return alg.hexdigest()
 
 
 def bse_sha256(d: str) -> str:
     _log().debug(f"len(d): {len(d)}")
     alg = hashlib.sha256()
     alg.update(d.encode())
-    return alg.hexdigest().upper()
+    return alg.hexdigest()
 
 
 def bse_sha1(d: str) -> str:
     _log().debug(f"len(d): {len(d)}")
     alg = hashlib.sha1()
     alg.update(d.encode())
-    return alg.hexdigest().upper()
+    return alg.hexdigest()
 
 
 def bse_md5(d: str) -> str:
     _log().debug(f"len(d): {len(d)}")
     alg = hashlib.md5()
     alg.update(d.encode())
-    return alg.hexdigest().upper()
+    return alg.hexdigest()
 
 
-def bse_hmac512(d: str, key: str) -> str:
-    _log().debug(f"len(d): {len(d)}, len(key): {len(key)}")
-    h = hmac.new(key.encode(), digestmod=hashlib.sha512)
-    h.update(d.encode())
-    return h.hexdigest().upper()
+def bse_hmac(
+    key: Union[str, bytes], d: Union[str, bytes], method: Callable[[], Any]
+) -> bytes:
+    if not isinstance(d, bytes):
+        d = d.encode("ascii")
+    if not isinstance(key, bytes):
+        key = key.encode("ascii")
+    h = hmac.new(key, d, digestmod=method)
+    _log().debug(f"{method.__name__}({'*' * len(key)}, {d!r}) = {h.hexdigest()}")
+    return h.digest()
 
 
-def bse_hmac384(d: str, key: str) -> str:
-    _log().debug(f"len(d): {len(d)}, len(key): {len(key)}")
-    h = hmac.new(key.encode(), digestmod=hashlib.sha384)
-    h.update(d.encode())
-    return h.hexdigest().upper()
+def bse_hmac512(key: Union[str, bytes], d: Union[str, bytes]) -> bytes:
+    return bse_hmac(key, d, hashlib.sha512)
 
 
-def bse_hmac256(d: str, key: str) -> str:
-    _log().debug(f"len(d): {len(d)}, len(key): {len(key)}")
-    h = hmac.new(key.encode(), digestmod=hashlib.sha256)
-    h.update(d.encode())
-    return h.hexdigest().upper()
+def bse_hmac384(key: Union[str, bytes], d: Union[str, bytes]) -> bytes:
+    return bse_hmac(key, d, hashlib.sha384)
+
+
+def bse_hmac256(key: Union[str, bytes], d: Union[str, bytes]) -> bytes:
+    return bse_hmac(key, d, hashlib.sha256)
 
 
 def bse_time() -> int:
-    t = datetime.now().timestamp() * 1000
+    t = time.time()
     _log().debug(f"timestamp: {t}")
     return int(t)
 

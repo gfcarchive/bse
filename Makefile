@@ -57,7 +57,7 @@ lint: ## check style with flake8
 > flake8 bse tests
 
 test: ## run tests quickly with the default Python
-> pytest -vv
+> pytest -vv $(PYTEST_OPTS)
 
 test-all: ## run tests on every Python version with tox
 > tox

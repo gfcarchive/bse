@@ -2,6 +2,7 @@
 
 import click
 from bse import defaults
+from bse import logger, todo
 
 
 @click.group(name="bse")
@@ -16,3 +17,5 @@ from bse import defaults
 @click.pass_context
 def main(ctx: click.Context, netrc: str) -> None:
     ctx.obj = {defaults.ENV_NETRC: netrc}
+    for t in todo.TODOs:
+        logger.new(t.filename).warning(f"[{t.context}] {t.msg}")

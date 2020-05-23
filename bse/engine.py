@@ -36,7 +36,7 @@ class Engine(object):
 
     def __enter__(self) -> "Engine":
         host = self._hostname()
-        self._log.debug(f"Searching credentials for {host}")
+        self._log.info(f"Searching credentials for {host}")
         rc = self.config.readrc(host)
         creds = model.Credential(username=rc.login, password=rc.password)
         self._m.initsession(creds)

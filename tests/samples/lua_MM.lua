@@ -39,9 +39,15 @@ test_sha256 = MM.sha256("text to hash")
 test_sha1 = MM.sha1("text to hash")
 test_md5 = MM.md5("text to hash")
 --
-test_hmac512 = MM.hmac512("secret-shared-key-goes-here", "this is the data to encrypt")
-test_hmac384 = MM.hmac384("secret-shared-key-goes-here", "this is the data to encrypt")
-test_hmac256 = MM.hmac256("secret-shared-key-goes-here", "this is the data to encrypt")
+function bin2hex(s)
+ return (s:gsub(".", function (byte)
+   return string.format("%02x", string.byte(byte))
+ end))
+end
+
+test_hmac512 = bin2hex(MM.hmac512("secret-shared-key-goes-here", "this is the data to encrypt"))
+test_hmac384 = bin2hex(MM.hmac384("secret-shared-key-goes-here", "this is the data to encrypt"))
+test_hmac256 = bin2hex(MM.hmac256("secret-shared-key-goes-here", "this is the data to encrypt"))
 --
 test_time = MM.time()
 --

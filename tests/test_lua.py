@@ -24,3 +24,14 @@ def test_min_descriptor() -> None:
         g[k] = v
     descriptor = lua.descriptor(luart)
     assert descriptor.name == _descr_d["extensionName"]
+
+
+def test_hmac256() -> None:
+    key = "fake_key"
+    data = "1590067388GET/v2/user"
+    digest = lua._globals.bse_hmac256(key, data)
+
+    assert (
+        digest.hex()
+        == "c6ea132e0da7f210b21f8081525c22d637108d385cb42b46c8fe0fc318cdcfe0"
+    )

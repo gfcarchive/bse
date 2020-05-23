@@ -18,7 +18,9 @@ class Connection(object):
     _baseurl: str = attr.ib(default=attr.Factory(str))
     _cookiestr: str = attr.ib(default=attr.Factory(str))
     _session: requests.Session = attr.ib(default=attr.Factory(requests.Session))
-    useragent: str = attr.ib(default=requests.utils.default_user_agent())  # type: ignore
+    useragent: str = attr.ib(
+        default=requests.utils.default_user_agent()  # type: ignore
+    )
     language: str = attr.ib(default="en-US")
 
     @_log.default
@@ -28,11 +30,15 @@ class Connection(object):
     def get(self, url: str) -> Tuple[str, str, str, str, Dict[str, str]]:
         return self.request("GET", url)
 
-    def post(self,
-             url: str,
-             post_content: Union[str, Dict[str, Any]] = None,
-             post_content_type: str = None) -> Tuple[str, str, str, str, Dict[str, str]]:
-        return self.request("POST", url, post_content=post_content, post_content_type=post_content_type)
+    def post(
+        self,
+        url: str,
+        post_content: Union[str, Dict[str, Any]] = None,
+        post_content_type: str = None,
+    ) -> Tuple[str, str, str, str, Dict[str, str]]:
+        return self.request(
+            "POST", url, post_content=post_content, post_content_type=post_content_type
+        )
 
     def request(
         self,
@@ -42,9 +48,9 @@ class Connection(object):
         post_content_type: str = None,
         headers: Dict[str, str] = None,
     ) -> Tuple[str, str, str, str, Dict[str, str]]:
-        self._log.debug(f"Request [{method}]: {url}")
 
         url = self._parse_url(url)
+        self._log.info(f"Request [{method}]: {url}")
 
         self._check_http_method(method)
 
@@ -52,13 +58,17 @@ class Connection(object):
         if self._cookiestr:
             headers["Cookie"] = self._cookiestr
         headers.update({"Accept-Language": self.language, "User-Agent": self.useragent})
+        self._log.info(headers, extra={"context": "[HTTP Headers]"})
 
         post_content = self._parse_content(post_content)
+        self._log.info(post_content, extra={"context": "[HTTP Body]"})
 
         resp = self._request(method, url, post_content, headers)
-        self._log.debug(f"Cookies: {self._session.cookies}")
+        self._log.debug(
+            self._topydict(self._session.cookies), extra={"context": "[Cookies]"}
+        )
 
-        self._log.debug(f"Response status code: {resp.status_code}")
+        self._log.info(f"Response status code: {resp.status_code}")
         self._check_response(resp, headers, url)
 
         # content-type: 'application/json; charset=utf8'
@@ -84,11 +94,11 @@ class Connection(object):
     def _parse_url(self, url: str) -> str:
         if not self._baseurl:
             self._baseurl = url
-            self._log.debug(f"Future BaseUrl: {url}")
+            self._log.info(url, extra={"context": "[Session URL]"})
         else:
             self._baseurl = parse.urljoin(self._baseurl, url)
             if self._baseurl != url:
-                self._log.debug(f"URL merging: {url} -> {self._baseurl}")
+                self._log.info(f"URL merging: {url} -> {self._baseurl}")
             url = self._baseurl
         return url
 
@@ -101,13 +111,19 @@ class Connection(object):
     ) -> requests.Response:
         req = getattr(self._session, method.lower())
         if post_content:
-            resp = req(url, data=post_content)
+            resp = req(url, headers=headers, data=post_content)
         else:
-            resp = req(url)
+            resp = req(url, headers=headers)
         return resp
 
     def _topydict(
-        self, d: Union[Dict[str, Any], requests.structures.CaseInsensitiveDict, None]
+        self,
+        d: Union[
+            Dict[str, Any],
+            requests.structures.CaseInsensitiveDict,
+            requests.cookies.RequestsCookieJar,
+            None,
+        ],
     ) -> Dict[str, str]:
         """
         The headers object return by Lua is not a fully functional dictionary and some methods

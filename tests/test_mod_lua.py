@@ -74,36 +74,29 @@ def test_mm(script: str) -> None:
         #
         assert (
             g.test_sha512
-            == "401779A9F6545849E11EC969949549AE41DD8DBDD4F133E21145A1EF6C1551E1A5302E8AAC7FF9CF955D98000C6E532FD9F193B"
-            + "39FA17695A2E650EC132F3140"
+            == "401779a9f6545849e11ec969949549ae41dd8dbdd4f133e21145a1ef6c1551e1a5302e8aac7ff9cf955d98000c6e532fd9f"
+            + "193b39fa17695a2e650ec132f3140"
         )
         assert (
             g.test_sha256
-            == "119E3F0D28CF6A92D29399D5787F90308B6B87670D8C2386EC42CB36E293B5C4"
+            == "119e3f0d28cf6a92d29399d5787f90308b6b87670d8c2386ec42cb36e293b5c4"
         )
-        assert g.test_sha1 == "1E0A5DA7CF8D083E5D170DB4E5CD03DC5B22D3FA"
-        assert g.test_md5 == "27703945B9BCEACB09546D2E103AD360"
+        assert g.test_sha1 == "1e0a5da7cf8d083e5d170db4e5cd03dc5b22d3fa"
+        assert g.test_md5 == "27703945b9bceacb09546d2e103ad360"
         #
-        assert (
-            g.test_hmac512
-            == (
-                "1613e1de8845bf9d652ac7023b1b499fa975c5102c25557ea3d2bca8213aa20caa823aaed9a8f5cb5e3e2c1a8cbdf55b86892"
-                + "319b5d356d70e05dc1fb0fbb813"
-            ).upper()
+        assert g.test_hmac512 == (
+            "1613e1de8845bf9d652ac7023b1b499fa975c5102c25557ea3d2bca8213aa20caa823aaed9a8f5cb5e3e2c1a8cbdf55b868923"
+            + "19b5d356d70e05dc1fb0fbb813"
         )
-        assert (
-            g.test_hmac384
-            == (
-                "87cae1d0fe8fef5c3c2c0cfb9ca06d99b8a6267084308c41c73b2c2aa638b94f7c43c3ba62aeffb2cf909c"
-                + "cc987df13b"
-            ).upper()
+        assert g.test_hmac384 == (
+            "87cae1d0fe8fef5c3c2c0cfb9ca06d99b8a6267084308c41c73b2c2aa638b94f7c43c3ba62aeffb2cf909ccc987df13b"
         )
         assert (
             g.test_hmac256
-            == "6e4e506a08fff48f42d4754ddebfbdaa61619ecbc3828eb2b4dda99f94875396".upper()
+            == "6e4e506a08fff48f42d4754ddebfbdaa61619ecbc3828eb2b4dda99f94875396"
         )
         #
-        assert len(str(g.test_time)) == 13  # length for timestamp with milliseconds
+        assert len(str(g.test_time)) == 10  # length for timestamp
 
 
 @pytest.mark.parametrize(

@@ -276,7 +276,7 @@ function MM.hmac512(key, data)
     --
     -- Rückgabewert:
     -- Binary digest: Message Authentication Code als binärer String
-    return bse_hmac512(data, key)
+    return bse_hmac512(key, data)
 end
 
 function MM.hmac384(key, data)
@@ -288,7 +288,7 @@ function MM.hmac384(key, data)
     --
     -- Rückgabewert:
     -- Binary digest: Message Authentication Code als binärer String
-    return bse_hmac384(data, key)
+    return bse_hmac384(key, data)
 end
 
 function MM.hmac256(key, data)
@@ -300,7 +300,7 @@ function MM.hmac256(key, data)
     --
     -- Rückgabewert:
     -- Binary digest: Message Authentication Code als binärer String
-    return bse_hmac256(data, key)
+    return bse_hmac256(key, data)
 end
 
 function MM.time()

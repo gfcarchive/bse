@@ -74,7 +74,6 @@ class LuaMod(Mod):
 
     def initsession(self, creds: model.Credential) -> None:
         g = self._luart.globals()
-        raise NotImplementedError("TODO: implement once we have test credentials")
         g.InitializeSession(
             self._protocol, self.name, creds.username, None, creds.password, None
         )

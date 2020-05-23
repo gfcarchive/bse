@@ -18,12 +18,12 @@ class JSON(object):
         return logger.new(self.__class__.__name__)
 
     def dictionary(self) -> Dict[str, Any]:
-        self._log.debug(f"[JSON(...):dictionary()] {self._jsontext}")
-        if self._json:
-            return self._json
-        if not self._jsontext:
-            self._jsontext = "{}"
-        self._json = json.loads(self._jsontext)
+        if not self._json:
+            if not self._jsontext:
+                self._jsontext = "{}"
+            self._json = json.loads(self._jsontext)
+
+        self._log.debug(self._json, extra={"context": "[JSON(...):dictionary()]"})
         return self._json
 
     def set(self, j: Any) -> "JSON":
