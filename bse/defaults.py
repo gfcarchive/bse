@@ -13,3 +13,7 @@ ENV_NETRC = "BSE_NETRC"
 # Dict keys to mask when debugging
 
 MASK_KEYS = ("CB-ACCESS-SIGN", "CB-ACCESS-KEY")
+
+# Script paths
+
+SCRIPT_PATHS = (_p.join(_p.here(__file__), "scripts"),)

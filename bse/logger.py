@@ -3,7 +3,8 @@
 import logging
 from bse import defaults
 from bse.transform import Jsonable
-from typing import Any, Dict, List
+from functools import update_wrapper
+from typing import Any, Callable, Dict, List
 
 
 class BSELogger(logging.getLoggerClass()):  # type: ignore
@@ -77,3 +78,18 @@ def new(name: str) -> Logger:
         c_handler.setFormatter(log_format)
         logger.addHandler(c_handler)
     return logger
+
+
+def logexceptions(f: Callable[..., Any]) -> Any:
+    """
+    Logs all uncaught exceptions
+    """
+
+    def _f(*args: List[Any], **kwargs: Dict[str, Any]) -> Any:
+        try:
+            return f(*args, **kwargs)
+        except Exception as e:
+            new(f.__name__).exception(e)
+            raise e
+
+    return update_wrapper(_f, f)

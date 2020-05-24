@@ -3,7 +3,7 @@
 
 import attr
 import types
-from bse import logger, mod, model
+from bse import logger, module, model, register
 from bse.config import Config
 from urllib.parse import urlparse
 from typing import List, Optional, Type
@@ -12,9 +12,10 @@ from typing import List, Optional, Type
 @attr.s
 class Engine(object):
 
-    modtype: mod.ModType = attr.ib()
+    slug: str = attr.ib()
     config: Config = attr.ib()
-    _m: mod.Mod = attr.ib()
+    _register: register.Register = attr.ib(factory=register.Register)
+    _m: module.Mod = attr.ib()
     _log: logger.Logger = attr.ib()
 
     @_log.default
@@ -22,8 +23,8 @@ class Engine(object):
         return logger.new(self.__class__.__name__)
 
     @_m.default
-    def _init_m(self) -> mod.Mod:
-        m = mod.modload(self.modtype)
+    def _init_m(self) -> module.Mod:
+        m = self._register.load(self.slug)
         return m
 
     def _hostname(self) -> str:

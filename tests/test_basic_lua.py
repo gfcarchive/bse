@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import lupa  # type: ignore
 import pytest  # type: ignore
-from bse import lua
+from bse import lua, module
 
 
 def test_descriptor_not_initialized() -> None:
@@ -35,3 +35,17 @@ def test_hmac256() -> None:
         digest.hex()
         == "c6ea132e0da7f210b21f8081525c22d637108d385cb42b46c8fe0fc318cdcfe0"
     )
+
+
+def test_string_script() -> None:
+    script = """
+WebBanking {
+  version = 1.0,
+  url = "https://google.com",
+  services = {"Service Name"},
+  description = "this is a description",
+}
+    """
+    m = module.LuaMod(script)
+    assert m.description == "this is a description"
+    assert m.slug == "string"

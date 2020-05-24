@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import pytest  # type: ignore
-from bse import mod, path, __version__
-from glob import glob
+from bse import module, path, __version__
 from unittest import mock
 
 
 @pytest.mark.parametrize("script", [path.join("samples", "lua_webbanking_ok.lua")])
 def test_mod_init(script: str) -> None:
     script = path.join(path.here(__file__), script)
-    m = mod.LuaMod(script)
+    m = module.LuaMod(script)
     assert m.version == "1.0"
     assert m.url == "https://www.mysite.com"
     assert m.description == "Service Description"
@@ -22,14 +21,14 @@ def test_mod_init(script: str) -> None:
 )
 def test_missing_global(script: str) -> None:
     script = path.join(path.here(__file__), script)
-    with pytest.raises(mod.ModError):
-        mod.LuaMod(script)
+    with pytest.raises(module.ModError):
+        module.LuaMod(script)
 
 
 @pytest.mark.parametrize("script", [path.join("samples", "lua_webbanking_min.lua")])
 def test_default_global(script: str) -> None:
     script = path.join(path.here(__file__), script)
-    m = mod.LuaMod(script)
+    m = module.LuaMod(script)
     assert m.version == __version__
     assert m.url is None
     assert m.name == m.slug
@@ -39,7 +38,7 @@ def test_default_global(script: str) -> None:
 def test_mm(script: str) -> None:
     script = path.join(path.here(__file__), script)
     with mock.patch("time.sleep") as mockts:
-        m = mod.LuaMod(script)
+        m = module.LuaMod(script)
         g = m._luart.globals()
         #
         mockts.assert_called_once_with(1)
@@ -109,13 +108,5 @@ def test_mm(script: str) -> None:
 )
 def test_mm_error(script: str) -> None:
     script = path.join(path.here(__file__), script)
-    with pytest.raises(mod.ModError):
-        mod.LuaMod(script)
-
-
-@pytest.mark.parametrize(
-    "script", glob(path.join(path.here(__file__), "luatests", "test*.lua"))
-)
-def test_lua_tests(script: str) -> None:
-    script = path.join(path.here(__file__), script)
-    mod.LuaMod(script)
+    with pytest.raises(module.ModError):
+        module.LuaMod(script)

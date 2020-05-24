@@ -5,7 +5,6 @@ from bse import path
 from bse import logger
 from bse import lua
 from bse import model
-from enum import Enum
 from typing import Any, Dict, List, Optional
 
 
@@ -33,7 +32,7 @@ class Mod(abc.ABC):
 @attr.s
 class LuaMod(Mod):
 
-    _script: str = attr.ib()  # _script could be either a file path, or a text to execute
+    script: str = attr.ib()  # script could be either a file path, or a text to execute
     _log: logger.Logger = attr.ib()
     _luart: lua.LuaRuntime = attr.ib(init=False)
     _protocol: str = attr.ib(init=False)
@@ -43,8 +42,8 @@ class LuaMod(Mod):
         return logger.new(self.__class__.__name__)
 
     def _initruntime(self) -> None:
-        if path.exists(self._script):
-            self.slug = path.fname(self._script)
+        if path.exists(self.script):
+            self.slug = path.fname(self.script).lower()
         else:
             self.slug = "string"
         self._luart = lua.runtime(self.slug, self._log)
@@ -62,10 +61,10 @@ class LuaMod(Mod):
         self._protocol = d.protocol
 
     def _runscript(self) -> None:
-        if path.exists(self._script):
-            self._luart.execute(path.readfile(self._script))
+        if path.exists(self.script):
+            self._luart.execute(path.readfile(self.script))
         else:
-            self._luart.execute(self._script)
+            self._luart.execute(self.script)
 
     def __attrs_post_init__(self) -> None:
         try:
@@ -97,17 +96,3 @@ class LuaMod(Mod):
         acclist = [self._new_account(a) for _, a in luaaccounts.items()]
         self._log.debug(acclist, extra={"context": "[Accounts]"})
         return acclist
-
-
-class ModType(Enum):
-    Coinbase = "Coinbase"
-
-    def script(self) -> str:
-        if self == ModType.Coinbase:
-            return path.join(path.here(__file__), "scripts", "Coinbase.lua")
-        raise NotImplementedError(f"Module Type {self} is not configured")
-
-
-def modload(modtype: ModType) -> Mod:
-    script = modtype.script()
-    return LuaMod(script)

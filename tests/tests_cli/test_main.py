@@ -15,6 +15,7 @@ Options:
 Commands:
   coinbase  Access Coinbase account and transaction data
   config    Get configuration options
+  scripts   Show the scripts discovered by the BSE tool
 """
 
 
