@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import click
 from bse import config
+from bse.transform import Jsonable
 from typing import Dict
 
 
@@ -9,5 +10,5 @@ from typing import Dict
 def cmd_config(obj: Dict[str, str]) -> int:
     """Get configuration options"""
     conf = config.new(obj)
-    click.echo(conf.json())
+    click.echo(Jsonable.dump(conf))
     return 0

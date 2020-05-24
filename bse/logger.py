@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import json
 import logging
 from bse import defaults
 from bse.transform import Jsonable
@@ -42,16 +41,14 @@ class BSELogger(logging.getLoggerClass()):  # type: ignore
                 if v and isinstance(v, str):
                     msg[k] = "*" * len(v)
             try:
-                msg = json.dumps(msg, indent=4)
+                msg = Jsonable.dump(msg)
             except Exception:
                 pass
-        elif isinstance(msg, list):
+        elif isinstance(msg, list) or isinstance(msg, Jsonable):
             try:
-                msg = json.dumps(msg, indent=4, default=Jsonable.default)
+                msg = Jsonable.dump(msg)
             except Exception:
                 pass
-        elif isinstance(msg, Jsonable):
-            msg = msg.json()
         super().debug(msg, *args, **kwargs)
 
 
