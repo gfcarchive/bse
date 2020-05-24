@@ -13,9 +13,9 @@ Options:
   --help        Show this message and exit.
 
 Commands:
-  coinbase  Access Coinbase account and transaction data
-  config    Get configuration options
-  scripts   Show the scripts discovered by the BSE tool
+  accounts  Retrieves the list of accounts for a given slug.
+  config    Get configuration options.
+  slugs     Shows the slugs loaded in bse.
 """
 
 

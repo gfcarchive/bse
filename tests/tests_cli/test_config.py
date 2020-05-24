@@ -36,7 +36,7 @@ def test_config_netrc() -> None:
 
 _cfg_help = f"""Usage: bse config [OPTIONS]
 
-  Get configuration options
+  Get configuration options.
 
 Options:
   --help  Show this message and exit.

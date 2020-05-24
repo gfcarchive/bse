@@ -6,14 +6,16 @@ from bse.transform import Jsonable
 from typing import Dict
 
 
-@click.command(name="scripts")
+@click.command(name="slugs")
 @click.pass_obj
 @logger.logexceptions
-def cmd_scripts(obj: Dict[str, str]) -> int:
-    """Show the scripts discovered by the BSE tool"""
+def cmd_slugs(obj: Dict[str, str]) -> int:
+    """
+    Shows the slugs loaded in bse. A slug is the identifier used for a script
+    """
     r = register.Register()
-    scripts = [
+    slugs = [
         {"slug": slug, "description": r.load(slug).description} for slug in r.slugs()
     ]
-    click.echo(Jsonable.dump(scripts))
+    click.echo(Jsonable.dump(slugs))
     return 0

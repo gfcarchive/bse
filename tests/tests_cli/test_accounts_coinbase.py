@@ -2,32 +2,10 @@
 
 import io
 import requests
-import tempfile
 import traceback
 from bse import cli, path
 from click.testing import CliRunner
 from typing import Dict
-
-
-_coinbase_help = f"""Usage: bse coinbase [OPTIONS] COMMAND [ARGS]...
-
-  Access Coinbase account and transaction data
-
-Options:
-  --help  Show this message and exit.
-
-Commands:
-  accounts  Retrieves the list of accounts
-"""
-
-
-def test_coinbase_help() -> None:
-    with tempfile.NamedTemporaryFile() as f:
-        runner = CliRunner()
-        result = runner.invoke(cli.main, f"--netrc {f.name} coinbase --help")
-        traceback.print_exception(*result.exc_info)
-        assert result.exit_code == 0
-        assert result.output == _coinbase_help
 
 
 _mocked_user = """
@@ -90,7 +68,7 @@ def test_coinbase_accounts(mocker) -> None:
     netrc = path.join(path.here(__file__), "..", "test.netrc")
 
     runner = CliRunner()
-    result = runner.invoke(cli.main, f"--netrc {netrc} coinbase accounts")
+    result = runner.invoke(cli.main, f"--netrc {netrc} accounts coinbase")
     traceback.print_exception(*result.exc_info)
     assert result.exit_code == 0
     assert result.output == _coinbase_accounts

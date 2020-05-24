@@ -12,28 +12,7 @@ class BSELogger(logging.getLoggerClass()):  # type: ignore
         kwargs["extra"] = kwargs.get("extra", {})
         kwargs["extra"]["context"] = kwargs["extra"].get("context", "")
 
-    def info(self, msg: Any, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
-        self._context(kwargs)
-        super().info(msg, *args, **kwargs)
-
-    def warning(self, msg: Any, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
-        self._context(kwargs)
-        super().warning(msg, *args, **kwargs)
-
-    def error(self, msg: Any, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
-        self._context(kwargs)
-        super().error(msg, *args, **kwargs)
-
-    def critical(self, msg: Any, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
-        self._context(kwargs)
-        super().critical(msg, *args, **kwargs)
-
-    def exception(self, msg: Any, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
-        self._context(kwargs)
-        super().exception(msg, *args, **kwargs)
-
-    def debug(self, msg: Any, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
-        self._context(kwargs)
+    def _tryjsonify(self, msg: Any) -> Any:
         if isinstance(msg, dict):
             # make a copy to mask values
             msg = dict(msg)
@@ -50,6 +29,36 @@ class BSELogger(logging.getLoggerClass()):  # type: ignore
                 msg = Jsonable.dump(msg)
             except Exception:
                 pass
+        return msg
+
+    def info(self, msg: Any, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
+        self._context(kwargs)
+        msg = self._tryjsonify(msg)
+        super().info(msg, *args, **kwargs)
+
+    def warning(self, msg: Any, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
+        self._context(kwargs)
+        msg = self._tryjsonify(msg)
+        super().warning(msg, *args, **kwargs)
+
+    def error(self, msg: Any, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
+        self._context(kwargs)
+        msg = self._tryjsonify(msg)
+        super().error(msg, *args, **kwargs)
+
+    def critical(self, msg: Any, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
+        self._context(kwargs)
+        msg = self._tryjsonify(msg)
+        super().critical(msg, *args, **kwargs)
+
+    def exception(self, msg: Any, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
+        self._context(kwargs)
+        msg = self._tryjsonify(msg)
+        super().exception(msg, *args, **kwargs)
+
+    def debug(self, msg: Any, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
+        self._context(kwargs)
+        msg = self._tryjsonify(msg)
         super().debug(msg, *args, **kwargs)
 
 
