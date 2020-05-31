@@ -13,9 +13,12 @@ Options:
   --help        Show this message and exit.
 
 Commands:
-  accounts  Retrieves the list of accounts for a given slug.
-  config    Get configuration options.
-  slugs     Shows the slugs loaded in bse.
+  accounts    Retrieves the list of accounts for a given slug.
+  balance     Retrieves the balance in multiple currencies for a given slug.
+  config      Get configuration options.
+  securities  Retrieves the list of securities for a given slug.
+  slugs       Shows the slugs loaded in bse.
+  transfers   Retrieves the list of transfers for a given slug.
 """
 
 

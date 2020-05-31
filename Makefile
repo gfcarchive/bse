@@ -98,4 +98,7 @@ mm-extensions: ## downloads MoneyMoney Extensions from https://moneymoney-app.co
 > mkdir -p tests/extensions
 > curl -s https://moneymoney-app.com/extensions/ | grep "href=\"/extensions/[^\"]*\"" | awk -F'href=' '{print $$2}' | awk -F '"' '{print $$2}' | xargs -I {} curl -s https://moneymoney-app.com{} -o tests{}
 
+currencies:
+> curl -s https://www.currency-iso.org/dam/downloads/lists/list_one.xml -o bse/model/iso4217.xml
+
 check-all: test mypy lint coverage ## Runs tests, mypy and linter in one go

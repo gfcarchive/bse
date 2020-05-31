@@ -55,5 +55,11 @@ class Engine(object):
     def accounts(self) -> List[model.Account]:
         return self._m.accounts()
 
-    def transfers(self) -> None:
-        pass
+    def transfers(self, account: model.Account) -> List[model.Transfer]:
+        return self._m.transfers(account)
+
+    def securities(self, account: model.Account) -> List[model.Security]:
+        return self._m.securities(account)
+
+    def balance(self, account: model.Account) -> model.Balance:
+        return self._m.balance(account)

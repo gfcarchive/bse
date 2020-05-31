@@ -28,6 +28,18 @@ class Mod(abc.ABC):
     def accounts(self) -> List[model.Account]:
         pass
 
+    @abc.abstractmethod
+    def transfers(self, account: model.Account) -> List[model.Transfer]:
+        pass
+
+    @abc.abstractmethod
+    def balance(self, account: model.Account) -> model.Balance:
+        pass
+
+    @abc.abstractmethod
+    def securities(self, account: model.Account) -> List[model.Security]:
+        pass
+
 
 @attr.s
 class LuaMod(Mod):
@@ -96,3 +108,12 @@ class LuaMod(Mod):
         acclist = [self._new_account(a) for _, a in luaaccounts.items()]
         self._log.debug(acclist, extra={"context": "[Accounts]"})
         return acclist
+
+    def transfers(self, account: model.Account) -> List[model.Transfer]:
+        raise NotImplementedError("Mod:transfers is not implemented")
+
+    def balance(self, account: model.Account) -> model.Balance:
+        raise NotImplementedError("Mod:balance is not implemented")
+
+    def securities(self, account: model.Account) -> List[model.Security]:
+        raise NotImplementedError("Mod:balance is not implemented")

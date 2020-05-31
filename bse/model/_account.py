@@ -3,13 +3,6 @@
 import attr
 from bse.transform import Jsonable
 from enum import Enum
-from typing import Optional
-
-
-@attr.s
-class Credential(object):
-    username: Optional[str] = attr.ib()
-    password: Optional[str] = attr.ib()
 
 
 class AccountType(Enum):
