@@ -19,20 +19,3 @@ def test_securities_without_slug() -> None:
     assert result.output == _securities_without_slug
     traceback.print_exception(*result.exc_info)
     assert result.exit_code > 0
-
-
-_securities_help = f"""Usage: bse securities [OPTIONS] SLUG
-
-  Retrieves the list of securities for a given slug.
-
-Options:
-  --help  Show this message and exit.
-"""
-
-
-def test_securities_help() -> None:
-    runner = CliRunner()
-    result = runner.invoke(cli.main, "securities --help")
-    assert result.output == _securities_help
-    traceback.print_exception(*result.exc_info)
-    assert result.exit_code == 0

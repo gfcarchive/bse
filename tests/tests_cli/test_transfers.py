@@ -19,20 +19,3 @@ def test_transfers_without_slug() -> None:
     assert result.output == _transfers_without_slug
     traceback.print_exception(*result.exc_info)
     assert result.exit_code > 0
-
-
-_transfers_help = f"""Usage: bse transfers [OPTIONS] SLUG
-
-  Retrieves the list of transfers for a given slug.
-
-Options:
-  --help  Show this message and exit.
-"""
-
-
-def test_transfers_help() -> None:
-    runner = CliRunner()
-    result = runner.invoke(cli.main, "transfers --help")
-    assert result.output == _transfers_help
-    traceback.print_exception(*result.exc_info)
-    assert result.exit_code == 0

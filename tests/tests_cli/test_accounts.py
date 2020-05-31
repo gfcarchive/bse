@@ -19,20 +19,3 @@ def test_accounts_without_slug() -> None:
     assert result.output == _accounts_without_slug
     traceback.print_exception(*result.exc_info)
     assert result.exit_code > 0
-
-
-_accounts_help = f"""Usage: bse accounts [OPTIONS] SLUG
-
-  Retrieves the list of accounts for a given slug.
-
-Options:
-  --help  Show this message and exit.
-"""
-
-
-def test_accounts_help() -> None:
-    runner = CliRunner()
-    result = runner.invoke(cli.main, "accounts --help")
-    assert result.output == _accounts_help
-    traceback.print_exception(*result.exc_info)
-    assert result.exit_code == 0

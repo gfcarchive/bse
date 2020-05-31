@@ -32,20 +32,3 @@ def test_config_netrc() -> None:
         assert result.output == cfg
         traceback.print_exception(*result.exc_info)
         assert result.exit_code == 0
-
-
-_cfg_help = f"""Usage: bse config [OPTIONS]
-
-  Get configuration options.
-
-Options:
-  --help  Show this message and exit.
-"""
-
-
-def test_config_help() -> None:
-    runner = CliRunner()
-    result = runner.invoke(cli.main, "config --help")
-    assert result.output == _cfg_help
-    traceback.print_exception(*result.exc_info)
-    assert result.exit_code == 0
