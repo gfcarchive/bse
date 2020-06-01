@@ -2,23 +2,8 @@
 
 import tempfile
 import traceback
-from bse import defaults, cli
+from bse import cli
 from click.testing import CliRunner
-
-
-_cfg = f"""{{
-    "netrc": "{defaults.NETRC}"
-}}
-"""
-
-
-def test_config() -> None:
-    """Test the config command"""
-    runner = CliRunner()
-    result = runner.invoke(cli.main, "config")
-    assert result.output == _cfg
-    traceback.print_exception(*result.exc_info)
-    assert result.exit_code == 0
 
 
 def test_config_netrc() -> None:
