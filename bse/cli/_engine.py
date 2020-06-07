@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import click
-from bse import config, logger
+from ._exceptions import jsonexception
+from bse import config
 from bse.engine import Engine
 from bse.transform import Jsonable
 from typing import Any, Callable, Dict
@@ -10,7 +11,7 @@ from typing import Any, Callable, Dict
 @click.command(name="accounts")
 @click.argument("slug", type=click.STRING)
 @click.pass_obj
-@logger.logexceptions
+@jsonexception
 def cmd_accounts(obj: Dict[str, str], slug: str) -> int:
     """Retrieves the list of accounts for a given slug."""
     conf = config.new(obj)
@@ -32,7 +33,7 @@ def _newcmd(cmd: str, doc: str) -> Callable[..., Any]:
     @click.command(name=cmd)
     @click.argument("slug", type=click.STRING)
     @click.pass_obj
-    @logger.logexceptions
+    @jsonexception
     def cmdf(obj: Dict[str, str], slug: str) -> int:
 
         conf = config.new(obj)
