@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-These are all functions to load into the global scope of the lua interpreter
+These are functions to load into the global scope of the lua interpreter
 """
 
 import binascii
@@ -15,6 +15,7 @@ from bse import __version__
 from bse.lua._connection import Connection
 from bse.lua._json import JSON
 from datetime import datetime
+from lupa import LuaRuntime  # type: ignore
 from typing import Any, Callable, Union
 from urllib.parse import quote, unquote
 
@@ -168,5 +169,8 @@ def bse_connection() -> Connection:
     return Connection()
 
 
-def bse_json(json: str = None) -> JSON:
-    return JSON(json)
+def bse_json(luart: LuaRuntime) -> Callable[..., Any]:
+    def _jsonf(json: str = None) -> JSON:
+        return JSON(luart, json)
+
+    return _jsonf

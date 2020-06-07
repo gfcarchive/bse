@@ -48,6 +48,10 @@ class LuaMod(Mod):
     _log: logger.Logger = attr.ib()
     _luart: lua.LuaRuntime = attr.ib(init=False)
     _protocol: str = attr.ib(init=False)
+    _timestamp_refresh: int = attr.ib(default=0)
+    _cached_balance: Optional[model.Balance] = attr.ib(default=None)
+    _cached_transfers: List[model.Transfer] = attr.ib(factory=list)
+    _cached_securities: List[model.Security] = attr.ib(factory=list)
 
     @_log.default
     def _initlog(self) -> logger.Logger:
@@ -109,6 +113,41 @@ class LuaMod(Mod):
         self._log.debug(acclist, extra={"context": "[Accounts]"})
         return acclist
 
+    def _new_security(self, ls: Any) -> model.Security:
+        ls = lua.lua2py(ls)
+        return model.Security(
+            name=ls["name"],
+            market=ls["market"],
+            amount=ls["amount"],
+            isin=ls.get("isin"),
+            number=ls.get("securityNumber"),
+            currency=ls.get(""),
+            quantity=ls.get(""),
+            original_amount=ls.get(""),
+            original_currency=ls.get(""),
+            exchange_rate=ls.get(""),
+            trade_timestamp=ls.get(""),
+            price=ls.get(""),
+            price_currency=ls.get(""),
+            purchase_price=ls.get(""),
+            purchase_price_currency=ls.get(""),
+        )
+
+    def _refresh(self, account: model.Account, since: int = 1) -> None:
+        """
+        minimum unix timestamp is 1
+        """
+        if since != self._timestamp_refresh:
+            g = self._luart.globals()
+            data = g.RefreshAccount(account, since)
+            for k, v in data.items():
+                if k == "securities":
+                    self._cached_securities.clear()
+                    for _, luasecurity in v.items():
+                        self._cached_securities.append(self._new_security(luasecurity))
+
+            self._timestamp_refresh = since
+
     def transfers(self, account: model.Account) -> List[model.Transfer]:
         raise NotImplementedError("Mod:transfers is not implemented")
 
@@ -116,4 +155,5 @@ class LuaMod(Mod):
         raise NotImplementedError("Mod:balance is not implemented")
 
     def securities(self, account: model.Account) -> List[model.Security]:
-        raise NotImplementedError("Mod:balance is not implemented")
+        self._refresh(account)
+        return self._cached_securities

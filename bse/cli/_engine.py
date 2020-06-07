@@ -40,7 +40,11 @@ def _newcmd(cmd: str, doc: str) -> Callable[..., Any]:
             ret = []
             for account in e.accounts():
                 f = getattr(e, cmd)
-                ret.append(f(account))
+                tmpret = f(account)
+                if isinstance(tmpret, list):
+                    ret.extend(tmpret)
+                else:
+                    ret.append(f(account))
             click.echo(Jsonable.dump(ret))
         return 0
 

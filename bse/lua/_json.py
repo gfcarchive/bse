@@ -2,14 +2,17 @@
 
 import attr
 import json
+from ._pylua import py2lua, lua2py
 from bse import logger
+from lupa import LuaRuntime  # type: ignore
 from typing import Any, Dict, Optional
 
 
 @attr.s
 class JSON(object):
 
-    _jsontext: Optional[str] = attr.ib(default="")
+    luart: LuaRuntime = attr.ib()
+    jsontext: Optional[str] = attr.ib(default="")
     _json: Optional[Any] = attr.ib(default=None)
     _log: logger.Logger = attr.ib()
 
@@ -19,19 +22,19 @@ class JSON(object):
 
     def dictionary(self) -> Dict[str, Any]:
         if not self._json:
-            if not self._jsontext:
-                self._jsontext = "{}"
-            self._json = json.loads(self._jsontext)
+            if not self.jsontext:
+                self.jsontext = "{}"
+            self._json = json.loads(self.jsontext)
 
         self._log.debug(self._json, extra={"context": "[JSON(...):dictionary()]"})
-        return self._json
+        return py2lua(self.luart, self._json)
 
     def set(self, j: Any) -> "JSON":
-        self._json = j
-        self._jsontext = json.dumps(j)
-        self._log.debug(f"[JSON():set(...)] {self._jsontext}")
+        self._json = lua2py(j)
+        self.jsontext = json.dumps(self._json)
+        self._log.debug(f"[JSON():set(...)] {self.jsontext}")
         return self
 
     def json(self) -> str:
-        self._log.debug(f"[JSON():json()] {self._jsontext}")
-        return self._jsontext or ""
+        self._log.debug(f"[JSON():json()] {self.jsontext}")
+        return self.jsontext or ""

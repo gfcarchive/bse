@@ -40,5 +40,5 @@ def runtime(slug: str, log: logger.Logger) -> LuaRuntime:
     g["bse_time"] = _globals.bse_time
     g["bse_sleep"] = _globals.bse_sleep
     g["bse_connection"] = _globals.bse_connection
-    g["bse_json"] = _globals.bse_json
+    g["bse_json"] = _globals.bse_json(luart)
     return luart
